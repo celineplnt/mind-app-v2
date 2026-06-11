@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#795CAB">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>mind.</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --violet:#795CAB;
+  --violet-dark:#5f4689;
+  --violet-light:#ede8f5;
+  --blanc:#FFFFFF;
+  --vert:#E0EDEC;
+  --jaune:#FFF0E0;
+  --gris:#808080;
+  --texte:#2d2438;
+  --radius:20px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Poppins',sans-serif;background:#3a2d52;display:flex;justify-content:center;align-items:center;min-height:100vh;color:var(--texte)}
+.brand,.logo-txt{font-family:'Fredoka',sans-serif;font-weight:700;letter-spacing:-0.02em}
+
+/* ===== Phone frame (desktop) ===== */
+#phone{width:390px;height:844px;background:var(--blanc);position:relative;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5);border-radius:46px;border:10px solid #1a1325}
+@media(max-width:500px){
+  body{background:var(--blanc)}
+  #phone{width:100vw;height:100dvh;border-radius:0;border:none;box-shadow:none}
+}
+
+/* ===== Screens ===== */
+.screen{position:absolute;inset:0;background:var(--blanc);display:none;flex-direction:column;overflow:hidden}
+.screen.active{display:flex}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+
+/* ===== Splash ===== */
+#splash{background:var(--violet);justify-content:center;align-items:center;z-index:100}
+#splash .logo-txt{font-size:72px;color:var(--blanc);animation:pop .8s cubic-bezier(.2,1.4,.4,1) both}
+#splash p{color:rgba(255,255,255,.7);font-size:13px;margin-top:12px;animation:fadeIn 1s .5s both}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* ===== Onboarding ===== */
+#onboarding{background:var(--blanc)}
+.ob-slide{display:none;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:40px 32px;text-align:center}
+.ob-slide.active{display:flex;animation:slideIn .4s ease both}
+@keyframes slideIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+.ob-illu{width:160px;height:160px;border-radius:48px;display:flex;align-items:center;justify-content:center;font-size:64px;margin-bottom:36px}
+.ob-slide h2{font-family:'Fredoka',sans-serif;font-weight:600;font-size:24px;color:var(--violet);margin-bottom:14px;line-height:1.3}
+.ob-slide p{font-size:14px;color:var(--gris);line-height:1.6}
+.ob-footer{padding:24px 32px 44px;display:flex;flex-direction:column;gap:18px;align-items:center}
+.dots{display:flex;gap:8px}
+.dot{width:8px;height:8px;border-radius:50%;background:#ddd;transition:.3s}
+.dot.on{background:var(--violet);width:24px;border-radius:4px}
+.btn{background:var(--violet);color:var(--blanc);border:none;border-radius:18px;padding:16px;font-family:'Poppins',sans-serif;font-weight:600;font-size:15px;width:100%;cursor:pointer;transition:.2s}
+.btn:active{transform:scale(.97);background:var(--violet-dark)}
+.btn.ghost{background:transparent;color:var(--gris);font-weight:500;padding:8px}
+
+/* ===== Login ===== */
+#login{justify-content:center;padding:0 32px}
+#login .logo-txt{font-size:52px;color:var(--violet);text-align:center;margin-bottom:6px}
+#login .sub{text-align:center;color:var(--gris);font-size:13px;margin-bottom:36px}
+.field{margin-bottom:14px}
+.field label{font-size:12px;font-weight:600;color:var(--texte);display:block;margin-bottom:6px}
+.field input{width:100%;border:2px solid #eee;border-radius:14px;padding:14px 16px;font-family:'Poppins',sans-serif;font-size:14px;outline:none;transition:.2s}
+.field input:focus{border-color:var(--violet)}
+.login-alt{text-align:center;font-size:12px;color:var(--gris);margin-top:20px}
+.login-alt b{color:var(--violet);cursor:pointer}
+
+/* ===== App shell ===== */
+.app-header{padding:54px 22px 16px;display:flex;align-items:center;justify-content:space-between}
+.app-header .logo-txt{font-size:26px;color:var(--violet)}
+.avatar{width:38px;height:38px;border-radius:50%;background:var(--violet);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;cursor:pointer}
+.page-title{font-family:'Fredoka',sans-serif;font-weight:600;font-size:22px;color:var(--texte);padding:0 22px;margin-bottom:4px}
+.page-sub{font-size:12.5px;color:var(--gris);padding:0 22px;margin-bottom:16px}
+
+/* ===== Bottom nav ===== */
+.bottom-nav{display:flex;border-top:1px solid #f0ecf6;background:var(--blanc);padding:10px 6px 26px}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:#b6aecb;font-size:9.5px;font-weight:500;transition:.2s}
+.nav-item svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav-item.on{color:var(--violet)}
+
+/* ===== Cards ===== */
+.card{background:var(--blanc);border:1.5px solid #f0ecf6;border-radius:var(--radius);padding:16px;margin:0 22px 12px}
+.card.violet{background:var(--violet);border:none;color:#fff}
+.card.vert{background:var(--vert);border:none}
+.card.jaune{background:var(--jaune);border:none}
+.card.lila{background:var(--violet-light);border:none}
+.row{display:flex;align-items:center;gap:12px}
+.ico{width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.grow{flex:1;min-width:0}
+.t1{font-weight:600;font-size:14px}
+.t2{font-size:11.5px;color:var(--gris)}
+.card.violet .t2{color:rgba(255,255,255,.75)}
+.badge{font-size:10px;font-weight:600;padding:4px 10px;border-radius:99px;white-space:nowrap}
+.b-violet{background:var(--violet-light);color:var(--violet)}
+.b-vert{background:var(--vert);color:#3a7a72}
+.b-jaune{background:var(--jaune);color:#b07b2e}
+.section-h{display:flex;justify-content:space-between;align-items:center;padding:0 22px;margin:20px 0 10px}
+.section-h h3{font-family:'Fredoka',sans-serif;font-weight:600;font-size:16px}
+.section-h span{font-size:12px;color:var(--violet);font-weight:600;cursor:pointer}
+
+/* Stats */
+.stats{display:flex;gap:10px;padding:0 22px;margin-bottom:6px}
+.stat{flex:1;border-radius:18px;padding:14px 12px;text-align:center}
+.stat .n{font-family:'Fredoka',sans-serif;font-weight:700;font-size:24px;color:var(--violet)}
+.stat .l{font-size:10px;color:var(--gris);font-weight:500;margin-top:2px}
+
+/* Agenda */
+.cal-week{display:flex;gap:6px;padding:0 22px;margin-bottom:18px}
+.cal-day{flex:1;text-align:center;padding:10px 0;border-radius:14px;cursor:pointer;transition:.2s}
+.cal-day .d{font-size:10px;color:var(--gris);font-weight:500}
+.cal-day .n{font-weight:600;font-size:15px;margin-top:2px}
+.cal-day.sel{background:var(--violet);color:#fff}
+.cal-day.sel .d{color:rgba(255,255,255,.7)}
+.timeline-item{display:flex;gap:14px;padding:0 22px;margin-bottom:4px}
+.tl-time{font-size:11px;font-weight:600;color:var(--gris);width:42px;padding-top:16px;flex-shrink:0}
+.tl-card{flex:1;border-radius:16px;padding:14px;margin-bottom:10px}
+
+/* Suivi */
+.child-tabs{display:flex;gap:8px;padding:0 22px;margin-bottom:16px}
+.child-tab{padding:9px 18px;border-radius:99px;border:1.5px solid #eee;font-size:13px;font-weight:600;cursor:pointer;background:#fff;font-family:'Poppins',sans-serif;transition:.2s}
+.child-tab.on{background:var(--violet);color:#fff;border-color:var(--violet)}
+.progress-bar{height:8px;background:rgba(255,255,255,.3);border-radius:99px;overflow:hidden;margin-top:10px}
+.progress-bar.dark{background:#eee}
+.progress-fill{height:100%;background:#fff;border-radius:99px}
+.progress-fill.violet{background:var(--violet)}
+
+/* Admin */
+.check{width:22px;height:22px;border-radius:8px;border:2px solid #ddd;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
+.check.on{background:var(--violet);border-color:var(--violet)}
+.check.on::after{content:'✓';color:#fff;font-size:13px;font-weight:700}
+.done .t1{text-decoration:line-through;color:var(--gris)}
+
+/* Famille */
+.msg{max-width:75%;padding:11px 15px;border-radius:18px;font-size:13px;line-height:1.45;margin-bottom:8px}
+.msg.me{background:var(--violet);color:#fff;margin-left:auto;border-bottom-right-radius:6px}
+.msg.them{background:#f3f0f9;border-bottom-left-radius:6px}
+.msg .who{font-size:10px;font-weight:600;opacity:.65;margin-bottom:3px}
+
+/* Detail / settings pages */
+.back-btn{display:flex;align-items:center;gap:6px;color:var(--violet);font-weight:600;font-size:14px;cursor:pointer;padding:54px 22px 10px}
+.set-row{display:flex;align-items:center;gap:14px;padding:15px 22px;border-bottom:1px solid #f6f3fb;cursor:pointer}
+.set-row .t1{font-size:14px}
+.chev{color:#ccc;font-size:18px}
+.toggle{width:44px;height:26px;border-radius:99px;background:#ddd;position:relative;cursor:pointer;transition:.2s;flex-shrink:0}
+.toggle::after{content:'';position:absolute;width:20px;height:20px;border-radius:50%;background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle.on{background:var(--violet)}
+.toggle.on::after{left:21px}
+
+/* FAB */
+.fab{position:absolute;bottom:104px;right:20px;width:54px;height:54px;border-radius:18px;background:var(--violet);color:#fff;border:none;font-size:26px;cursor:pointer;box-shadow:0 8px 20px rgba(121,92,171,.4);display:flex;align-items:center;justify-content:center;transition:.2s;z-index:5}
+.fab:active{transform:scale(.92)}
+
+/* Toast */
+#toast{position:absolute;bottom:110px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--texte);color:#fff;padding:11px 20px;border-radius:14px;font-size:13px;opacity:0;pointer-events:none;transition:.3s;z-index:50;white-space:nowrap}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Modal */
+#modal-bg{position:absolute;inset:0;background:rgba(45,36,56,.5);z-index:40;display:none;align-items:flex-end}
+#modal-bg.show{display:flex}
+#modal{background:#fff;border-radius:28px 28px 0 0;width:100%;padding:26px 24px 40px;animation:up .3s ease both}
+@keyframes up{from{transform:translateY(100%)}to{transform:translateY(0)}}
+#modal h3{font-family:'Fredoka',sans-serif;font-weight:600;font-size:18px;margin-bottom:18px}
+</style>
+</head>
+<body>
+<div id="phone">
+
+  <!-- SPLASH -->
+  <div class="screen active" id="splash">
+    <div class="logo-txt">mind.</div>
+    <p>L'esprit léger, enfin.</p>
+  </div>
+
+  <!-- ONBOARDING -->
+  <div class="screen" id="onboarding">
+    <div class="ob-slide active">
+      <div class="ob-illu" style="background:var(--violet-light)">🧠</div>
+      <h2>Trop de choses<br>à gérer ?</h2>
+      <p>Rendez-vous médicaux, séances d'orthophonie, dossiers MDPH, coordination… La charge mentale des parents d'enfants à besoins spécifiques est immense.</p>
+    </div>
+    <div class="ob-slide">
+      <div class="ob-illu" style="background:var(--vert)">📋</div>
+      <h2>Tout centralisé,<br>au même endroit</h2>
+      <p>mind. regroupe l'agenda médical, les suivis thérapeutiques, les démarches administratives et la coordination parentale dans une seule application.</p>
+    </div>
+    <div class="ob-slide">
+      <div class="ob-illu" style="background:var(--jaune)">💜</div>
+      <h2>L'esprit léger,<br>enfin.</h2>
+      <p>Concentrez-vous sur l'essentiel : votre enfant. mind. s'occupe de l'organisation.</p>
+    </div>
+    <div class="ob-footer">
+      <div class="dots"><div class="dot on"></div><div class="dot"></div><div class="dot"></div></div>
+      <button class="btn" onclick="nextSlide()">Continuer</button>
+      <button class="btn ghost" onclick="go('login')">Passer</button>
+    </div>
+  </div>
+
+  <!-- LOGIN -->
+  <div class="screen" id="login">
+    <div class="logo-txt">mind.</div>
+    <div class="sub">Connectez-vous pour retrouver votre espace</div>
+    <div class="field"><label>Email</label><input type="email" value="sophie.dupont@gmail.com"></div>
+    <div class="field"><label>Mot de passe</label><input type="password" value="••••••••"></div>
+    <button class="btn" style="margin-top:10px" onclick="login()">Se connecter</button>
+    <div class="login-alt">Pas encore de compte ? <b>S'inscrire</b></div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="screen" id="home">
+    <div class="app-header">
+      <div class="logo-txt">mind.</div>
+      <div class="avatar" onclick="go('settings')">BB</div>
+    </div>
+    <div class="scroll">
+      <div class="page-title">Bonjour Benjamin 👋</div>
+      <div class="page-sub">Jeudi 11 juin — voici votre journée</div>
+
+      <div class="stats">
+        <div class="stat" style="background:var(--violet-light)"><div class="n">3</div><div class="l">RDV cette semaine</div></div>
+        <div class="stat" style="background:var(--vert)"><div class="n">2</div><div class="l">Tâches en attente</div></div>
+        <div class="stat" style="background:var(--jaune)"><div class="n">1</div><div class="l">Document à envoyer</div></div>
+      </div>
+
+      <div class="section-h"><h3>Aujourd'hui</h3><span onclick="go('agenda')">Agenda →</span></div>
+      <div class="card violet">
+        <div class="row">
+          <div class="ico" style="background:rgba(255,255,255,.18)">🗣️</div>
+          <div class="grow"><div class="t1">Orthophonie — Léo</div><div class="t2">16h30 · Cabinet Mme Fontaine, Versailles</div></div>
+          <div class="badge" style="background:rgba(255,255,255,.2);color:#fff">Dans 2h</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="row">
+          <div class="ico" style="background:var(--jaune)">💊</div>
+          <div class="grow"><div class="t1">Renouvellement ordonnance</div><div class="t2">Avant 18h · Pharmacie du Château</div></div>
+        </div>
+      </div>
+
+      <div class="section-h"><h3>À ne pas oublier</h3><span onclick="go('admin')">Tout voir →</span></div>
+      <div class="card vert">
+        <div class="row">
+          <div class="ico" style="background:rgba(255,255,255,.6)">📄</div>
+          <div class="grow"><div class="t1">Dossier MDPH — renouvellement</div><div class="t2">Échéance : 30 juin · 2 pièces manquantes</div></div>
+        </div>
+        <div class="progress-bar dark"><div class="progress-fill violet" style="width:70%"></div></div>
+      </div>
+
+      <div class="section-h"><h3>Mes enfants</h3></div>
+      <div class="card lila" onclick="go('child')" style="cursor:pointer">
+        <div class="row">
+          <div class="ico" style="background:#fff;font-family:'Fredoka';font-weight:700;color:var(--violet)">L</div>
+          <div class="grow"><div class="t1">Léo, 8 ans</div><div class="t2">TDAH · Dyslexie — 4 suivis actifs</div></div>
+          <div class="chev">›</div>
+        </div>
+      </div>
+      <div class="card" onclick="toast('Profil de Jade — bientôt disponible')" style="cursor:pointer">
+        <div class="row">
+          <div class="ico" style="background:var(--jaune);font-family:'Fredoka';font-weight:700;color:#b07b2e">J</div>
+          <div class="grow"><div class="t1">Jade, 5 ans</div><div class="t2">Suivi psychomotricité — 1 suivi actif</div></div>
+          <div class="chev">›</div>
+        </div>
+      </div>
+      <div style="height:24px"></div>
+    </div>
+    <button class="fab" onclick="openModal()">+</button>
+  </div>
+
+  <!-- AGENDA -->
+  <div class="screen" id="agenda">
+    <div class="app-header">
+      <div class="logo-txt">mind.</div>
+      <div class="avatar" onclick="go('settings')">BB</div>
+    </div>
+    <div class="page-title">Agenda</div>
+    <div class="page-sub">Juin 2026</div>
+    <div class="cal-week">
+      <div class="cal-day" onclick="selDay(this)"><div class="d">Lun</div><div class="n">8</div></div>
+      <div class="cal-day" onclick="selDay(this)"><div class="d">Mar</div><div class="n">9</div></div>
+      <div class="cal-day" onclick="selDay(this)"><div class="d">Mer</div><div class="n">10</div></div>
+      <div class="cal-day sel" onclick="selDay(this)"><div class="d">Jeu</div><div class="n">11</div></div>
+      <div class="cal-day" onclick="selDay(this)"><div class="d">Ven</div><div class="n">12</div></div>
+      <div class="cal-day" onclick="selDay(this)"><div class="d">Sam</div><div class="n">13</div></div>
+      <div class="cal-day" onclick="selDay(this)"><div class="d">Dim</div><div class="n">14</div></div>
+    </div>
+    <div class="scroll">
+      <div class="timeline-item">
+        <div class="tl-time">09:00</div>
+        <div class="tl-card" style="background:var(--vert)">
+          <div class="t1">École — réunion ESS</div>
+          <div class="t2">Équipe de suivi de scolarisation · École Jean Moulin</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">14:00</div>
+        <div class="tl-card" style="background:var(--jaune)">
+          <div class="t1">Appel CPAM</div>
+          <div class="t2">Suivi remboursement séances psychomot — Jade</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">16:30</div>
+        <div class="tl-card" style="background:var(--violet);color:#fff">
+          <div class="t1">Orthophonie — Léo</div>
+          <div class="t2" style="color:rgba(255,255,255,.75)">Mme Fontaine · 12 rue de la Paroisse, Versailles</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">18:00</div>
+        <div class="tl-card" style="background:var(--violet-light)">
+          <div class="t1">Passage de relais — Sarah</div>
+          <div class="t2">Léo et Jade chez leur maman jusqu'à dimanche</div>
+        </div>
+      </div>
+      <div style="height:90px"></div>
+    </div>
+    <button class="fab" onclick="openModal()">+</button>
+  </div>
+
+  <!-- SUIVI -->
+  <div class="screen" id="suivi">
+    <div class="app-header">
+      <div class="logo-txt">mind.</div>
+      <div class="avatar" onclick="go('settings')">BB</div>
+    </div>
+    <div class="page-title">Suivi thérapeutique</div>
+    <div class="page-sub">Séances, progrès et comptes-rendus</div>
+    <div class="child-tabs">
+      <button class="child-tab on">Léo</button>
+      <button class="child-tab" onclick="toast('Suivis de Jade — démo')">Jade</button>
+    </div>
+    <div class="scroll">
+      <div class="card violet">
+        <div class="row">
+          <div class="ico" style="background:rgba(255,255,255,.18)">🗣️</div>
+          <div class="grow"><div class="t1">Orthophonie</div><div class="t2">Mme Fontaine · 2 séances/semaine</div></div>
+          <div class="badge" style="background:rgba(255,255,255,.2);color:#fff">24/40</div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+      </div>
+      <div class="card vert">
+        <div class="row">
+          <div class="ico" style="background:rgba(255,255,255,.6)">🧩</div>
+          <div class="grow"><div class="t1">Psychologue TCC</div><div class="t2">Dr Mercier · 1 séance/semaine</div></div>
+          <div class="badge" style="background:#fff;color:#3a7a72">8/12</div>
+        </div>
+        <div class="progress-bar dark"><div class="progress-fill violet" style="width:66%"></div></div>
+      </div>
+      <div class="card jaune">
+        <div class="row">
+          <div class="ico" style="background:rgba(255,255,255,.7)">✍️</div>
+          <div class="grow"><div class="t1">Graphothérapie</div><div class="t2">M. Lambert · 1 séance/2 semaines</div></div>
+          <div class="badge" style="background:#fff;color:#b07b2e">5/10</div>
+        </div>
+        <div class="progress-bar dark"><div class="progress-fill violet" style="width:50%"></div></div>
+      </div>
+      <div class="card">
+        <div class="row">
+          <div class="ico" style="background:var(--violet-light)">👨‍⚕️</div>
+          <div class="grow"><div class="t1">Neuropédiatre</div><div class="t2">Dr Haddad · Bilan annuel — prochain RDV 03/09</div></div>
+          <div class="badge b-violet">Suivi</div>
+        </div>
+      </div>
+
+      <div class="section-h"><h3>Derniers comptes-rendus</h3></div>
+      <div class="card">
+        <div class="row">
+          <div class="ico" style="background:var(--vert)">📝</div>
+          <div class="grow"><div class="t1">Séance ortho du 9 juin</div><div class="t2">« Bons progrès en conscience phonologique. Léo gagne en confiance à la lecture orale. »</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="row">
+          <div class="ico" style="background:var(--jaune)">📝</div>
+          <div class="grow"><div class="t1">Séance TCC du 5 juin</div><div class="t2">« Travail sur la gestion de la frustration. Exercices de respiration à poursuivre à la maison. »</div></div>
+        </div>
+      </div>
+      <div style="height:90px"></div>
+    </div>
+    <button class="fab" onclick="openModal()">+</button>
+  </div>
+
+  <!-- ADMIN -->
+  <div class="screen" id="admin">
+    <div class="app-header">
+      <div class="logo-txt">mind.</div>
+      <div class="avatar" onclick="go('settings')">BB</div>
+    </div>
+    <div class="page-title">Démarches</div>
+    <div class="page-sub">Dossiers, documents et remboursements</div>
+    <div class="scroll">
+      <div class="card violet">
+        <div class="row">
+          <div class="ico" style="background:rgba(255,255,255,.18)">📄</div>
+          <div class="grow"><div class="t1">Dossier MDPH — Léo</div><div class="t2">Renouvellement AEEH · Échéance 30 juin</div></div>
+          <div class="badge" style="background:rgba(255,255,255,.2);color:#fff">70%</div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div>
+      </div>
+
+      <div class="section-h"><h3>Tâches</h3><span onclick="toast('Toutes les tâches — démo')">Tout voir →</span></div>
+      <div class="card"><div class="row"><div class="check" onclick="tick(this)"></div><div class="grow"><div class="t1">Demander certificat médical au Dr Haddad</div><div class="t2">Pour le dossier MDPH · Urgent</div></div><div class="badge b-jaune">⏰ 15/06</div></div></div>
+      <div class="card"><div class="row"><div class="check" onclick="tick(this)"></div><div class="grow"><div class="t1">Envoyer GEVA-Sco à l'enseignante référente</div><div class="t2">Mme Dubois · École Jean Moulin</div></div><div class="badge b-violet">📎 Joint</div></div></div>
+      <div class="card done"><div class="row"><div class="check on" onclick="tick(this)"></div><div class="grow"><div class="t1">Scanner le bilan orthophonique</div><div class="t2">Ajouté au dossier le 8 juin</div></div></div></div>
+
+      <div class="section-h"><h3>Remboursements</h3></div>
+      <div class="card vert">
+        <div class="row">
+          <div class="ico" style="background:rgba(255,255,255,.6)">💶</div>
+          <div class="grow"><div class="t1">Psychomotricité — Jade (mai)</div><div class="t2">180 € · CPAM + mutuelle</div></div>
+          <div class="badge" style="background:#fff;color:#3a7a72">Remboursé</div>
+        </div>
+      </div>
+      <div class="card jaune">
+        <div class="row">
+          <div class="ico" style="background:rgba(255,255,255,.7)">💶</div>
+          <div class="grow"><div class="t1">Graphothérapie — Léo (mai-juin)</div><div class="t2">240 € · Dossier mutuelle envoyé</div></div>
+          <div class="badge" style="background:#fff;color:#b07b2e">En cours</div>
+        </div>
+      </div>
+
+      <div class="section-h"><h3>Coffre-fort documents</h3><span onclick="toast('Coffre-fort — démo')">Ouvrir →</span></div>
+      <div class="card">
+        <div class="row">
+          <div class="ico" style="background:var(--violet-light)">🔒</div>
+          <div class="grow"><div class="t1">14 documents sécurisés</div><div class="t2">Bilans, ordonnances, notifications MDPH, jugements</div></div>
+          <div class="chev">›</div>
+        </div>
+      </div>
+      <div style="height:90px"></div>
+    </div>
+    <button class="fab" onclick="openModal()">+</button>
+  </div>
+
+  <!-- FAMILLE -->
+  <div class="screen" id="famille">
+    <div class="app-header">
+      <div class="logo-txt">mind.</div>
+      <div class="avatar" onclick="go('settings')">BB</div>
+    </div>
+    <div class="page-title">Co-parentalité</div>
+    <div class="page-sub">Espace partagé avec Sarah</div>
+    <div class="scroll">
+      <div class="card lila">
+        <div class="row">
+          <div class="ico" style="background:#fff">🗓️</div>
+          <div class="grow"><div class="t1">Garde cette semaine</div><div class="t2">Lun–Jeu : Benjamin · Ven–Dim : Sarah</div></div>
+        </div>
+      </div>
+      <div class="card vert">
+        <div class="row">
+          <div class="ico" style="background:rgba(255,255,255,.6)">🔄</div>
+          <div class="grow"><div class="t1">Synchronisation active</div><div class="t2">Sarah voit l'agenda, les suivis et les documents partagés en temps réel</div></div>
+        </div>
+      </div>
+
+      <div class="section-h"><h3>Messages</h3></div>
+      <div style="padding:0 22px">
+        <div class="msg them"><div class="who">Sarah</div>Tu peux récupérer le compte-rendu de l'ortho ce soir ? J'aimerais le lire avant la réunion ESS 🙏</div>
+        <div class="msg me">Oui je le scanne direct après la séance de 16h30, tu l'auras dans l'appli ce soir 👍</div>
+        <div class="msg them"><div class="who">Sarah</div>Parfait. Et j'ai pris le RDV neuropédiatre pour le 3 septembre, je l'ai ajouté à l'agenda.</div>
+        <div class="msg me">Vu ! Merci 💜</div>
+      </div>
+      <div style="padding:14px 22px">
+        <div class="row">
+          <input style="flex:1;border:2px solid #eee;border-radius:99px;padding:12px 18px;font-family:'Poppins';font-size:13px;outline:none" placeholder="Écrire un message…" id="msgInput">
+          <button class="btn" style="width:46px;height:46px;border-radius:50%;padding:0;flex-shrink:0" onclick="sendMsg()">➤</button>
+        </div>
+      </div>
+      <div style="height:90px"></div>
+    </div>
+  </div>
+
+  <!-- PROFIL ENFANT -->
+  <div class="screen" id="child">
+    <div class="back-btn" onclick="go('home')">‹ Retour</div>
+    <div class="scroll">
+      <div style="text-align:center;padding:6px 22px 20px">
+        <div style="width:84px;height:84px;border-radius:28px;background:var(--violet);color:#fff;font-family:'Fredoka';font-weight:700;font-size:36px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px">L</div>
+        <div style="font-family:'Fredoka';font-weight:600;font-size:22px">Léo Berger</div>
+        <div class="t2">8 ans · CE2 · École Jean Moulin, Versailles</div>
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:12px">
+          <span class="badge b-violet">TDAH</span>
+          <span class="badge b-vert">Dyslexie</span>
+          <span class="badge b-jaune">AEEH</span>
+        </div>
+      </div>
+
+      <div class="section-h"><h3>Équipe de soin</h3></div>
+      <div class="card"><div class="row"><div class="ico" style="background:var(--violet-light)">🗣️</div><div class="grow"><div class="t1">Mme Fontaine</div><div class="t2">Orthophoniste · 01 39 50 12 34</div></div><div class="chev">›</div></div></div>
+      <div class="card"><div class="row"><div class="ico" style="background:var(--vert)">🧩</div><div class="grow"><div class="t1">Dr Mercier</div><div class="t2">Psychologue TCC · 01 39 51 87 65</div></div><div class="chev">›</div></div></div>
+      <div class="card"><div class="row"><div class="ico" style="background:var(--jaune)">👨‍⚕️</div><div class="grow"><div class="t1">Dr Haddad</div><div class="t2">Neuropédiatre · CH Versailles</div></div><div class="chev">›</div></div></div>
+
+      <div class="section-h"><h3>Aménagements scolaires</h3></div>
+      <div class="card lila">
+        <div class="t1" style="margin-bottom:6px">PAP en cours</div>
+        <div class="t2">Tiers-temps · supports adaptés (police OpenDyslexic, consignes orales) · place au premier rang · AESH 12h/semaine</div>
+      </div>
+
+      <div class="section-h"><h3>Notes importantes</h3></div>
+      <div class="card jaune">
+        <div class="t2" style="color:var(--texte)">⚠️ Allergie : arachides (PAI en place à la cantine)<br>💊 Traitement : Quasym LP 20mg le matin — renouvellement mensuel</div>
+      </div>
+      <div style="height:40px"></div>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="screen" id="settings">
+    <div class="back-btn" onclick="go('home')">‹ Retour</div>
+    <div class="page-title">Paramètres</div>
+    <div class="scroll" style="margin-top:8px">
+      <div class="set-row">
+        <div class="avatar" style="width:48px;height:48px;font-size:17px">BB</div>
+        <div class="grow"><div class="t1">Benjamin Berger</div><div class="t2">benjamin-berger@hotmail.fr · Forfait Famille+</div></div>
+        <div class="chev">›</div>
+      </div>
+      <div class="set-row"><div class="ico" style="background:var(--violet-light);width:36px;height:36px;font-size:16px">🔔</div><div class="grow t1">Notifications de rappel</div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="set-row"><div class="ico" style="background:var(--vert);width:36px;height:36px;font-size:16px">🔄</div><div class="grow t1">Synchro co-parent (Sarah)</div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="set-row"><div class="ico" style="background:var(--jaune);width:36px;height:36px;font-size:16px">📅</div><div class="grow t1">Export vers calendrier iPhone</div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+      <div class="set-row" onclick="toast('Gestion des profils — démo')"><div class="ico" style="background:var(--violet-light);width:36px;height:36px;font-size:16px">👧</div><div class="grow t1">Profils enfants</div><div class="chev">›</div></div>
+      <div class="set-row" onclick="toast('Confidentialité — démo')"><div class="ico" style="background:#f3f0f9;width:36px;height:36px;font-size:16px">🔒</div><div class="grow t1">Confidentialité & données de santé</div><div class="chev">›</div></div>
+      <div class="set-row" onclick="toast('Aide — démo')"><div class="ico" style="background:#f3f0f9;width:36px;height:36px;font-size:16px">💬</div><div class="grow t1">Aide & contact</div><div class="chev">›</div></div>
+      <div style="padding:22px"><button class="btn ghost" style="color:#d9534f" onclick="logout()">Se déconnecter</button></div>
+      <div style="text-align:center;padding-bottom:30px"><span class="logo-txt" style="font-size:18px;color:#d6cce8">mind.</span><div class="t2" style="font-size:10px">version 1.0.0</div></div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav" id="nav" style="display:none;position:absolute;bottom:0;left:0;right:0;z-index:10">
+    <div class="nav-item on" data-s="home" onclick="tab(this)">
+      <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>Accueil
+    </div>
+    <div class="nav-item" data-s="agenda" onclick="tab(this)">
+      <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Agenda
+    </div>
+    <div class="nav-item" data-s="suivi" onclick="tab(this)">
+      <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 8-6-16-3 8H2"/></svg>Suivi
+    </div>
+    <div class="nav-item" data-s="admin" onclick="tab(this)">
+      <svg viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M9 14l2 2 4-4"/></svg>Démarches
+    </div>
+    <div class="nav-item" data-s="famille" onclick="tab(this)">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M21 21v-2a4 4 0 0 0-3-3.87M16 3.13A4 4 0 0 1 16 11"/></svg>Famille
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div id="modal-bg" onclick="if(event.target===this)closeModal()">
+    <div id="modal">
+      <h3>Ajouter</h3>
+      <div class="card lila" style="margin:0 0 10px;cursor:pointer" onclick="closeModal();toast('Nouveau RDV — démo')"><div class="row"><div class="ico" style="background:#fff">📅</div><div class="grow"><div class="t1">Rendez-vous</div><div class="t2">Médical, thérapeutique ou scolaire</div></div></div></div>
+      <div class="card vert" style="margin:0 0 10px;cursor:pointer" onclick="closeModal();toast('Nouvelle tâche — démo')"><div class="row"><div class="ico" style="background:rgba(255,255,255,.6)">✅</div><div class="grow"><div class="t1">Tâche</div><div class="t2">Démarche ou chose à faire</div></div></div></div>
+      <div class="card jaune" style="margin:0;cursor:pointer" onclick="closeModal();toast('Document ajouté — démo')"><div class="row"><div class="ico" style="background:rgba(255,255,255,.7)">📎</div><div class="grow"><div class="t1">Document</div><div class="t2">Scanner ou importer un fichier</div></div></div></div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+</div>
+
+<script>
+let obIdx = 0;
+const slides = document.querySelectorAll('.ob-slide');
+const dots = document.querySelectorAll('.dot');
+
+setTimeout(() => go('onboarding'), 2200);
+
+function go(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const appScreens = ['home','agenda','suivi','admin','famille'];
+  document.getElementById('nav').style.display = appScreens.includes(id) ? 'flex' : 'none';
+  if(appScreens.includes(id)){
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('on', n.dataset.s === id));
+  }
+}
+function nextSlide(){
+  if(obIdx < 2){
+    slides[obIdx].classList.remove('active');
+    dots[obIdx].classList.remove('on');
+    obIdx++;
+    slides[obIdx].classList.add('active');
+    dots[obIdx].classList.add('on');
+    if(obIdx === 2) document.querySelector('.ob-footer .btn').textContent = 'Commencer';
+  } else go('login');
+}
+function login(){ go('home'); }
+function logout(){ obIdx = 0; slides.forEach((s,i)=>s.classList.toggle('active',i===0)); dots.forEach((d,i)=>d.classList.toggle('on',i===0)); document.querySelector('.ob-footer .btn').textContent='Continuer'; go('login'); }
+function tab(el){ go(el.dataset.s); }
+function selDay(el){
+  document.querySelectorAll('.cal-day').forEach(d => d.classList.remove('sel'));
+  el.classList.add('sel');
+  if(el.querySelector('.n').textContent !== '11') toast('Journée sans événement — démo');
+}
+function tick(el){
+  el.classList.toggle('on');
+  el.closest('.card').classList.toggle('done');
+  if(el.classList.contains('on')) toast('Tâche terminée ✓');
+}
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._tm);
+  t._tm = setTimeout(() => t.classList.remove('show'), 2200);
+}
+function openModal(){ document.getElementById('modal-bg').classList.add('show'); }
+function closeModal(){ document.getElementById('modal-bg').classList.remove('show'); }
+function sendMsg(){
+  const inp = document.getElementById('msgInput');
+  if(!inp.value.trim()) return;
+  const div = document.createElement('div');
+  div.className = 'msg me';
+  div.textContent = inp.value;
+  inp.closest('div[style]').previousElementSibling.appendChild(div);
+  inp.value = '';
+}
+</script>
+</body>
+</html>
