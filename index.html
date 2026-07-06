@@ -2,16 +2,16 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#795CAB">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Mind. — Application DYS</title>
 <meta name="theme-color" content="#795CAB">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Mind.">
 <meta name="mobile-web-app-capable" content="yes">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
@@ -35,6 +35,13 @@ body{font-family:'Poppins',sans-serif;background:#3a2d52;display:flex;justify-co
 #phone{width:390px;height:844px;background:var(--blanc);position:relative;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5);border-radius:46px;border:10px solid #1a1325}
 @media(max-width:500px){
   body{background:var(--blanc)}
+  /* Safe area iOS — évite le décalage gris en haut */
+  #phone{
+    padding-top:env(safe-area-inset-top,0);
+    background:var(--blanc);
+  }
+  /* Le splash garde son fond violet jusqu'en haut */
+  #splash{margin-top:calc(-1 * env(safe-area-inset-top,0));padding-top:env(safe-area-inset-top,0)}
   #phone{width:100vw;height:100dvh;border-radius:0;border:none;box-shadow:none}
 }
 
